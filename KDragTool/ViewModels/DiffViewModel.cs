@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -22,12 +24,13 @@ namespace KDragTool.ViewModels
             
             OpenFirstFile = new RelayCommand(x => { FirstFile = OpenFile(); });
             OpenSecondFile = new RelayCommand(x => { SecondFile = OpenFile(); });
+            ExploreToCommand = new RelayCommand(x => { ExploreTo(x.ToString()); });
         }
-        delegate void OF(out string arg);
 
         public event PropertyChangedEventHandler PropertyChanged = null;
         public ICommand OpenFirstFile { get; set; }
         public ICommand OpenSecondFile { get; set; }
+        public ICommand ExploreToCommand { get; set; }
 
         private string firstFile = string.Empty;
         public string FirstFile
@@ -114,6 +117,17 @@ namespace KDragTool.ViewModels
                 LeftDiff = new ObservableCollection<TextLine>(Diff.MakeUnorderedLinesDiff(FirstFile, SecondFile));
                 RightDiff = new ObservableCollection<TextLine>(Diff.MakeUnorderedLinesDiff(SecondFile, FirstFile));
             }
+        }
+
+        private void ExploreTo(string path)
+        {
+            if (!File.Exists(path))
+            {
+                return;
+            }
+            
+            string argument = "/select, \"" + path + "\"";
+            Process.Start("explorer.exe", argument);
         }
     }
 }
