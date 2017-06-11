@@ -1,6 +1,8 @@
-﻿using Microsoft.Win32;
+﻿using KDragTool.Models;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -57,8 +59,7 @@ namespace KDragTool.ViewModels
             }
         }
 
-        private string leftDiff = string.Empty;
-        public string LeftDiff
+        public ObservableCollection<TextLine> LeftDiff
         {
             get
             {
@@ -68,24 +69,29 @@ namespace KDragTool.ViewModels
             set
             {
                 leftDiff = value;
-                OnPropertyChanged("LeftFiff");
+                OnPropertyChanged("LeftDiff");
             }
         }
 
-        private string rightDiff = string.Empty;
-        public string RightDiff
+        private ObservableCollection<TextLine> leftDiff;
+
+        public ObservableCollection<TextLine> RightDiff
         {
             get
             {
-                return rightDiff;
+                return rigthDiff;
             }
 
             set
             {
-                rightDiff = value;
+                rigthDiff = value;
                 OnPropertyChanged("RightDiff");
             }
         }
+
+        private ObservableCollection<TextLine> rigthDiff;
+
+
 
         virtual protected void OnPropertyChanged(string propName)
         {
@@ -105,8 +111,8 @@ namespace KDragTool.ViewModels
         {
             if(File.Exists(FirstFile) && File.Exists(SecondFile))
             {
-                LeftDiff = Diff.MakeUnorderedLinesDiff(FirstFile, SecondFile);
-                RightDiff = Diff.MakeUnorderedLinesDiff(SecondFile, FirstFile);
+                LeftDiff = new ObservableCollection<TextLine>(Diff.MakeUnorderedLinesDiff(FirstFile, SecondFile));
+                RightDiff = new ObservableCollection<TextLine>(Diff.MakeUnorderedLinesDiff(SecondFile, FirstFile));
             }
         }
     }

@@ -68,8 +68,26 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock  Grid.Column="0" Text="{Binding LeftDiff}" TextWrapping="Wrap" />
-                <TextBlock  Grid.Column="1" Text="{Binding RightDiff}" TextWrapping="Wrap" />
+                <ListView Grid.Column="0" ItemsSource="{Binding LeftDiff}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate >
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox  Text="{Binding Path=LineNumber, StringFormat=Line {0}: }" IsReadOnly="True" Background="Transparent" BorderThickness="0" TextWrapping="Wrap"/>
+                                <TextBox  Text="{Binding Path=LineContent}" IsReadOnly="True" Background="Transparent" BorderThickness="0" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <ListView Grid.Column="1" ItemsSource="{Binding RightDiff}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate >
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox  Text="{Binding Path=LineNumber, StringFormat=Line {0}: }" IsReadOnly="True" Background="Transparent" BorderThickness="0" TextWrapping="Wrap"/>
+                                <TextBox  Text="{Binding Path=LineContent}" IsReadOnly="True" Background="Transparent" BorderThickness="0" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </Grid>
         </ScrollViewer>
 

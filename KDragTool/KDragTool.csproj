@@ -50,6 +50,7 @@
       <DependentUpon>DiffDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Diff.cs" />
+    <Compile Include="Models\TextLine.cs" />
     <Compile Include="DllExport\DllExportAttribute.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="NppPluginNETBase.cs" />

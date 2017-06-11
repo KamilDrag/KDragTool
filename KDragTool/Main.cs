@@ -14,7 +14,7 @@ namespace KDragTool
     {
         #region " Fields "
         internal const string PluginName = "KDragTool";
-        static string iniFilePath = null;
+        static string firstFile = null;
         static bool someSetting = false;
         static Bitmap tbBmp = Properties.Resources.star;
         static Bitmap tbBmp_tbTab = Properties.Resources.star_bmp;
@@ -25,10 +25,10 @@ namespace KDragTool
         {
             StringBuilder sbIniFilePath = new StringBuilder(Win32.MAX_PATH);
             Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETPLUGINSCONFIGDIR, Win32.MAX_PATH, sbIniFilePath);
-            iniFilePath = sbIniFilePath.ToString();
-            if (!Directory.Exists(iniFilePath)) Directory.CreateDirectory(iniFilePath);
-            iniFilePath = Path.Combine(iniFilePath, PluginName + ".ini");
-            someSetting = (Win32.GetPrivateProfileInt("SomeSection", "SomeKey", 0, iniFilePath) != 0);
+            firstFile = sbIniFilePath.ToString();
+            if (!Directory.Exists(firstFile)) Directory.CreateDirectory(firstFile);
+            firstFile = Path.Combine(firstFile, PluginName + ".ini");
+            someSetting = (Win32.GetPrivateProfileInt("SomeSection", "SomeKey", 0, firstFile) != 0);
 
             PluginBase.SetCommand(0, "Unordered diff", UnorderedDiff, new ShortcutKey(false, false, false, Keys.None));
         }
@@ -40,10 +40,6 @@ namespace KDragTool
             Marshal.StructureToPtr(tbIcons, pTbIcons, false);
             Marshal.FreeHGlobal(pTbIcons);
         }
-        internal static void PluginCleanUp()
-        {
-            Win32.WritePrivateProfileString("SomeSection", "SomeKey", someSetting ? "1" : "0", iniFilePath);
-        }
         #endregion
 
         #region " Menu functions "
@@ -51,8 +47,8 @@ namespace KDragTool
         {
             StringBuilder currentFilePath = new StringBuilder(Win32.MAX_PATH);
             Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLCURRENTPATH, Win32.MAX_PATH, currentFilePath);
-            iniFilePath = currentFilePath.ToString();
-            var dlg = new DiffDialog(iniFilePath, "");
+            firstFile = currentFilePath.ToString();
+            var dlg = new DiffDialog(firstFile);
             dlg.Show();
         }
         #endregion

@@ -53,7 +53,6 @@ namespace KDragTool
             }
             else if (nc.nmhdr.code == (uint)NppMsg.NPPN_SHUTDOWN)
             {
-                Main.PluginCleanUp();
                 Marshal.FreeHGlobal(_ptrPluginName);
             }
         }
