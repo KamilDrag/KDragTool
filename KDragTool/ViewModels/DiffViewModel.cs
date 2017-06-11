@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,10 +17,17 @@ namespace KDragTool.ViewModels
         {
             FirstFile = firstFile;
             SecondFile = SecondFile;
+            
+            OpenFirstFile = new RelayCommand(x => { FirstFile = OpenFile(); });
+            OpenSecondFile = new RelayCommand(x => { SecondFile = OpenFile(); });
         }
-        public event PropertyChangedEventHandler PropertyChanged = null;
+        delegate void OF(out string arg);
 
-        private string firstFile = "";
+        public event PropertyChangedEventHandler PropertyChanged = null;
+        public ICommand OpenFirstFile { get; set; }
+        public ICommand OpenSecondFile { get; set; }
+
+        private string firstFile = string.Empty;
         public string FirstFile
         {
             get
@@ -29,10 +38,11 @@ namespace KDragTool.ViewModels
             {
                 firstFile = value;
                 OnPropertyChanged("FirstFile");
+                OnUpdateFilePath();
             }
         }
 
-        private string secondFile = "";
+        private string secondFile = string.Empty;
         public string SecondFile
         {
             get
@@ -43,10 +53,11 @@ namespace KDragTool.ViewModels
             {
                 secondFile = value;
                 OnPropertyChanged("SecondFile");
+                OnUpdateFilePath();
             }
         }
 
-        private string leftDiff = "";
+        private string leftDiff = string.Empty;
         public string LeftDiff
         {
             get
@@ -57,10 +68,11 @@ namespace KDragTool.ViewModels
             set
             {
                 leftDiff = value;
+                OnPropertyChanged("LeftFiff");
             }
         }
 
-        private string rightDiff = "";
+        private string rightDiff = string.Empty;
         public string RightDiff
         {
             get
@@ -71,12 +83,31 @@ namespace KDragTool.ViewModels
             set
             {
                 rightDiff = value;
+                OnPropertyChanged("RightDiff");
             }
         }
 
         virtual protected void OnPropertyChanged(string propName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+        }
+        
+        private string OpenFile()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Multiselect = false;
+            openFileDialog.InitialDirectory = string.IsNullOrWhiteSpace(FirstFile) ?
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) : FirstFile;
+            return openFileDialog.ShowDialog() == true ? openFileDialog.FileName : string.Empty;
+        }
+
+        private void OnUpdateFilePath()
+        {
+            if(File.Exists(FirstFile) && File.Exists(SecondFile))
+            {
+                LeftDiff = Diff.MakeUnorderedLinesDiff(FirstFile, SecondFile);
+                RightDiff = Diff.MakeUnorderedLinesDiff(SecondFile, FirstFile);
+            }
         }
     }
 }

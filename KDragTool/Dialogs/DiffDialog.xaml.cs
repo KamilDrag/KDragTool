@@ -26,5 +26,11 @@ namespace KDragTool.Dialogs
             InitializeComponent();
             DataContext = new DiffViewModel();
         }
+
+        public DiffDialog(string firstFile = "", string secondFile = "")
+        {
+            InitializeComponent();
+            DataContext = new DiffViewModel(firstFile, secondFile);
+        }
     }
 }

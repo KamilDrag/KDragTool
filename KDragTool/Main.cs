@@ -30,7 +30,7 @@ namespace KDragTool
             iniFilePath = Path.Combine(iniFilePath, PluginName + ".ini");
             someSetting = (Win32.GetPrivateProfileInt("SomeSection", "SomeKey", 0, iniFilePath) != 0);
 
-            PluginBase.SetCommand(0, "Hello world!", HelloWorld, new ShortcutKey(false, false, false, Keys.None));
+            PluginBase.SetCommand(0, "Unordered diff", UnorderedDiff, new ShortcutKey(false, false, false, Keys.None));
         }
         internal static void SetToolBarIcon()
         {
@@ -47,9 +47,12 @@ namespace KDragTool
         #endregion
 
         #region " Menu functions "
-        internal static void HelloWorld()
+        internal static void UnorderedDiff()
         {
-            var dlg = new DiffDialog();
+            StringBuilder currentFilePath = new StringBuilder(Win32.MAX_PATH);
+            Win32.SendMessage(PluginBase.nppData._nppHandle, NppMsg.NPPM_GETFULLCURRENTPATH, Win32.MAX_PATH, currentFilePath);
+            iniFilePath = currentFilePath.ToString();
+            var dlg = new DiffDialog(iniFilePath, "");
             dlg.Show();
         }
         #endregion
