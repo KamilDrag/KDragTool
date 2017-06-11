@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using NppPluginNET;
+using KDragTool.Dialogs;
 
 namespace KDragTool
 {
@@ -17,7 +18,6 @@ namespace KDragTool
         static bool someSetting = false;
         static Bitmap tbBmp = Properties.Resources.star;
         static Bitmap tbBmp_tbTab = Properties.Resources.star_bmp;
-        static Icon tbIcon = null;
         #endregion
 
         #region " StartUp/CleanUp "
@@ -49,7 +49,8 @@ namespace KDragTool
         #region " Menu functions "
         internal static void HelloWorld()
         {
-            MessageBox.Show("Hello N++!");
+            var dlg = new DiffDialog();
+            dlg.Show();
         }
         #endregion
     }
